@@ -5,6 +5,7 @@ Worker untuk render Pomodoro jarak jauh melalui Tailscale. Worker menerima manif
 ## Deploy manual di Windows
 
 1. Salin atau clone folder `worker` ke `D:\Projects\pomodoro-video-factory-worker\app`.
+   Worker juga membutuhkan shared renderer dari repo Mac. Jika tidak clone repo penuh, salin `be\src\shared` ke `D:\Projects\pomodoro-video-factory-worker\be\src\shared`.
 2. Instal Node.js LTS, FFmpeg, dan ffprobe; pastikan `ffmpeg -version` dan `ffprobe -version` bekerja dari Command Prompt.
 3. Di `D:\Projects\pomodoro-video-factory-worker\app`, jalankan `npm install`.
 4. Salin `.env.example` menjadi `.env`, lalu isi `WORKER_API_TOKEN` dengan secret kuat. Pastikan `WORKER_ROOT=D:\Projects\pomodoro-video-factory-worker`.

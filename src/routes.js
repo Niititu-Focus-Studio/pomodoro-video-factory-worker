@@ -47,7 +47,7 @@ function createRoutes({ config, store, queue, availability }) {
 
   router.get('/status', (_req, res) => {
     const status = queue.getStatus();
-    res.json({ activeJobId: status.activeJobId, activeJob: status.activeJobId ? store.getJob(status.activeJobId) : null, queuedJobs: status.queuedJobs, queuedJobCount: status.queuedJobCount, ready: config.maxActiveRenders === 1 && availability.ffmpeg && availability.ffprobe, ffmpegAvailable: availability.ffmpeg, ffprobeAvailable: availability.ffprobe });
+    res.json({ activeJobId: status.activeJobId, activeJob: status.activeJobId ? store.getJob(status.activeJobId) : null, queuedJobs: status.queuedJobs, queuedJobCount: status.queuedJobCount, ready: config.maxActiveRenders === 1 && availability.ffmpeg && availability.ffprobe, ffmpegAvailable: availability.ffmpeg, ffprobeAvailable: availability.ffprobe, renderUploadSupported: true });
   });
   router.get('/jobs', (_req, res) => res.json({ jobs: store.listJobs(), ...queue.getStatus() }));
   router.get('/jobs/:jobId', validJobId, (req, res) => {

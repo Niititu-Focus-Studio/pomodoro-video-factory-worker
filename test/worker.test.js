@@ -48,7 +48,9 @@ test('health is public and authenticated status rejects missing and wrong tokens
 
     const status = await fetch(`${url}/api/status`, { headers: { Authorization: 'Bearer test-token' } });
     assert.equal(status.status, 200);
-    assert.equal(typeof (await status.json()).ready, 'boolean');
+    const body = await status.json();
+    assert.equal(typeof body.ready, 'boolean');
+    assert.equal(body.renderUploadSupported, true);
   });
 });
 
