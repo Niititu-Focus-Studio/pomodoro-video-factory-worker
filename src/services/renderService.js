@@ -1,6 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
-const { executeRenderPipeline } = require("../../../shared/renderPipeline");
+const { executeRenderPipeline } = require("../shared/renderPipeline");
 
 const SAFE_ASSET = /^assets\/[A-Za-z0-9._ -]+$/;
 
