@@ -74,6 +74,10 @@ function resolveRenderManifest(config, job) {
   const tempDir = job.tempDir || path.join(config.directories.temp, job.id);
   const outDir = job.outputDir || path.join(config.directories.outputs, job.id);
   const assets = job.manifest.assets;
+  const fontItalicPath = resolveInside(uploadDir, assets.fontItalic);
+  if (!fs.existsSync(fontItalicPath)) {
+    throw new Error(`Uploaded font file is missing: ${assets.fontItalic}`);
+  }
   return {
     focusVideoPath: resolveInside(uploadDir, assets.focusVideo),
     breakVideoPath: resolveInside(uploadDir, assets.breakVideo),
@@ -87,7 +91,7 @@ function resolveRenderManifest(config, job) {
     bellPath: assets.sessionBell
       ? resolveInside(uploadDir, assets.sessionBell)
       : null,
-    fontItalicPath: resolveInside(uploadDir, assets.fontItalic),
+    fontItalicPath,
     tempDir,
     outDir,
     finalFilename: path.basename(

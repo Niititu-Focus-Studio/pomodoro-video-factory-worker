@@ -164,7 +164,10 @@ test('render job upload persists manifest and files inside the isolated job fold
 test('logical asset resolution stays inside the job upload directory', (t) => {
   const worker = makeWorker();
   t.after(() => fs.rmSync(worker.root, { recursive: true, force: true }));
-  const job = worker.store.createJob({ state: 'queued', manifest: testManifest(), uploadDir: path.join(worker.root, 'uploads', 'job') });
+  const uploadDir = path.join(worker.root, 'uploads', 'job');
+  fs.mkdirSync(path.join(uploadDir, 'assets'), { recursive: true });
+  fs.writeFileSync(path.join(uploadDir, 'assets', 'CormorantGaramond-Italic.ttf'), 'font');
+  const job = worker.store.createJob({ state: 'queued', manifest: testManifest(), uploadDir });
 
   const resolved = resolveRenderManifest(worker.config, job);
   assert.equal(resolved.focusVideoPath.endsWith(path.join('assets', 'focus-video.mp4')), true);
@@ -172,6 +175,19 @@ test('logical asset resolution stays inside the job upload directory', (t) => {
   const unsafe = { ...job, manifest: testManifest() };
   unsafe.manifest.assets.breakVideo = 'assets/../outside.mp4';
   assert.throws(() => resolveRenderManifest(createConfig({ WORKER_ROOT: worker.root, WORKER_API_TOKEN: 'test-token' }), unsafe), /Unsafe asset path/);
+});
+
+test('render manifest reports a clear error when the uploaded font is missing', (t) => {
+  const worker = makeWorker();
+  t.after(() => fs.rmSync(worker.root, { recursive: true, force: true }));
+  const uploadDir = path.join(worker.root, 'uploads', 'job');
+  fs.mkdirSync(path.join(uploadDir, 'assets'), { recursive: true });
+  const job = worker.store.createJob({ state: 'queued', manifest: testManifest(), uploadDir });
+
+  assert.throws(
+    () => resolveRenderManifest(worker.config, job),
+    /Uploaded font file is missing: assets\/CormorantGaramond-Italic\.ttf/,
+  );
 });
 
 test('queue runs only one render at a time', async (t) => {
